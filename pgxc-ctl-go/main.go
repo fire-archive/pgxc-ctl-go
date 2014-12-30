@@ -12,6 +12,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os/user"
+        "runtime"
 )
 
 // http://golang-basic.blogspot.ca/2014/06/step-by-step-guide-to-ssh-using-go.html
@@ -40,12 +41,12 @@ func main() {
 	if runtime.GOOS == "windows" {
 		pageant.Init()
 	} else {
-		conn, err := net.Dial("unix", os.Getenv("SSH_AUTH_SOCK"))
+	/*	conn, err := net.Dial("unix", os.Getenv("SSH_AUTH_SOCK"))
 		if err != nil {
 			log.Fatal(err)
 		}
 		defer conn.Close()
-		ag = agent.NewClient(conn)
+		ag = agent.NewClient(conn)*/
 	}
 	config := &ssh.ClientConfig{
 		User: username,
