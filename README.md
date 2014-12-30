@@ -1,7 +1,7 @@
 pgxc-ctl-go
 ==========
 
-## How to use
+## Using on Windows
 
 On Windows setup the golang installation.
 
