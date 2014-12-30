@@ -1,2 +1,2 @@
-gopgxc-ctl
+pgxc-ctl-go
 ==========
