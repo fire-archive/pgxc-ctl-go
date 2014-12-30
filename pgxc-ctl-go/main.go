@@ -12,7 +12,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os/user"
-        "runtime"
+	"runtime"
 )
 
 // http://golang-basic.blogspot.ca/2014/06/step-by-step-guide-to-ssh-using-go.html
@@ -38,20 +38,22 @@ const (
 )
 
 func main() {
+	var config *ssh.ClientConfig
 	if runtime.GOOS == "windows" {
 		pageant.Init()
-	} else {
-	/*	conn, err := net.Dial("unix", os.Getenv("SSH_AUTH_SOCK"))
-		if err != nil {
-			log.Fatal(err)
+		config = &ssh.ClientConfig{
+			User: username,
+			Auth: pageant.Auth(),
 		}
-		defer conn.Close()
-		ag = agent.NewClient(conn)*/
+	} else {
+		/*	conn, err := net.Dial("unix", os.Getenv("SSH_AUTH_SOCK"))
+			if err != nil {
+				log.Fatal(err)
+			}
+			defer conn.Close()
+			ag = agent.NewClient(conn)*/
 	}
-	config := &ssh.ClientConfig{
-		User: username,
-		Auth: pageant.Auth(),
-	}
+
 	client, err := ssh.Dial("tcp", server, config)
 	if err != nil {
 		log.Fatalln("Failed to connect via ssh:", err)
