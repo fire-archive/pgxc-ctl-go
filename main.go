@@ -7,12 +7,11 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"github.com/fire/pgxc-ctl-go/pageant"
+	"github.com/fire/pgxc-ctl-go/pgxc"
 	"golang.org/x/crypto/ssh"
 	"io/ioutil"
 	"log"
 	"os/user"
-	"runtime"
 )
 
 // http://golang-basic.blogspot.ca/2014/06/step-by-step-guide-to-ssh-using-go.html
@@ -38,23 +37,7 @@ const (
 )
 
 func main() {
-	var config *ssh.ClientConfig
-	if runtime.GOOS == "windows" {
-		pageant.Init()
-		config = &ssh.ClientConfig{
-			User: username,
-			Auth: pageant.Auth(),
-		}
-	} else {
-		/*	conn, err := net.Dial("unix", os.Getenv("SSH_AUTH_SOCK"))
-			if err != nil {
-				log.Fatal(err)
-			}
-			defer conn.Close()
-			ag = agent.NewClient(conn)*/
-	}
-
-	client, err := ssh.Dial("tcp", server, config)
+	client, err := ssh.Dial("tcp", server, pgxc.Config(username))
 	if err != nil {
 		log.Fatalln("Failed to connect via ssh:", err)
 	}
