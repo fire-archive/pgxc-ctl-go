@@ -15,15 +15,11 @@ import (
 )
 
 func authAgent() (auth ssh.AuthMethod) {
-        if(os.Getenv("SSH_AUTH_SOCK") == "") {
-		//return
-	}
-		
 	conn, err := net.Dial("unix", os.Getenv("SSH_AUTH_SOCK"))
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf(err.Error())
 	}
-	//defer conn.Close()
+	// defer conn.Close() Leak, but crashes if used
 	ag := agent.NewClient(conn)
 	return ssh.PublicKeysCallback(ag.Signers)
 }
@@ -59,7 +55,11 @@ func authKey() (auth ssh.AuthMethod) {
 func Config(username string) *ssh.ClientConfig {
 	config := &ssh.ClientConfig{
 		User: username,
-		Auth: []ssh.AuthMethod{authKey()}, //authAgent()?
 	}
+	if os.Getenv("SSH_AUTH_SOCK") != "" {
+		config.Auth = append(config.Auth, authAgent())
+	}
+	config.Auth = append(config.Auth, authKey())
+
 	return config
 }

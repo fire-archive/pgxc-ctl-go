@@ -40,7 +40,7 @@ const (
 func main() {
 	client, err := ssh.Dial("tcp", server, pgxc.Config(username))
 	if err != nil {
-		log.Fatalln("Failed to connect via ssh:", err)
+		log.Fatalln("Failed to connect:", err)
 	}
 
 	session, err := client.NewSession()
