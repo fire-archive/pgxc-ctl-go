@@ -9,17 +9,11 @@ import (
 	"golang.org/x/crypto/ssh"
 	"golang.org/x/crypto/ssh/agent"
 	"io/ioutil"
-	"log"
 	"net"
 	"os"
 )
 
-func authAgent() (auth ssh.AuthMethod) {
-	conn, err := net.Dial("unix", os.Getenv("SSH_AUTH_SOCK"))
-	if err != nil {
-		log.Fatalf(err.Error())
-	}
-	// defer conn.Close() Leak, but crashes if used
+func authAgent(conn net.Conn) (auth ssh.AuthMethod) {
 	ag := agent.NewClient(conn)
 	return ssh.PublicKeysCallback(ag.Signers)
 }
@@ -52,12 +46,12 @@ func authKey() (auth ssh.AuthMethod) {
 	return ssh.PublicKeys(signers...)
 }
 
-func Config(username string) *ssh.ClientConfig {
+func Config(username string, unixConn net.Conn) *ssh.ClientConfig {
 	config := &ssh.ClientConfig{
 		User: username,
 	}
-	if os.Getenv("SSH_AUTH_SOCK") != "" {
-		config.Auth = append(config.Auth, authAgent())
+	if os.Getenv("SSH_AUTH_SOCK") != "" {	 			      
+		config.Auth = append(config.Auth, authAgent(unixConn))
 	}
 	config.Auth = append(config.Auth, authKey())
 
