@@ -8,9 +8,10 @@ package pgxc
 import (
         "github.com/fire/pgxc-ctl-go/pageant"
 	"golang.org/x/crypto/ssh"
+        "net"
 )
 
-func Config(username string) (*ssh.ClientConfig){
+func Config(username string, conn net.Conn) (*ssh.ClientConfig) {
 	pageant.Init()
 	config := &ssh.ClientConfig{
 		User: username,

@@ -42,7 +42,7 @@ const (
 
 func main() {
 	var unixConn net.Conn
-	if runtime.GOOS != "Windows" {
+	if runtime.GOOS != "windows" {
 		var err error
 		unixConn, err = net.Dial("unix", os.Getenv("SSH_AUTH_SOCK"))
 		if err != nil {
@@ -60,7 +60,7 @@ func main() {
 	}
 	defer session.Close()
 	defer client.Close()
-	if runtime.GOOS != "Windows" {
+	if runtime.GOOS != "windows" {
 		defer unixConn.Close()
 	}
 	var b bytes.Buffer
