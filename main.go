@@ -1,6 +1,6 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. 
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  * Copyright (c) 2014, K. S. Ernest "iFire" Lee */
 
 package main
@@ -12,7 +12,10 @@ import (
 	"golang.org/x/crypto/ssh"
 	"io/ioutil"
 	"log"
+	"net"
+	"os"
 	"os/user"
+	"runtime"
 )
 
 // http://golang-basic.blogspot.ca/2014/06/step-by-step-guide-to-ssh-using-go.html
@@ -38,7 +41,15 @@ const (
 )
 
 func main() {
-	client, err := ssh.Dial("tcp", server, pgxc.Config(username))
+	var unixConn net.Conn
+	if runtime.GOOS != "Windows" {
+		var err error
+		unixConn, err = net.Dial("unix", os.Getenv("SSH_AUTH_SOCK"))
+		if err != nil {
+			log.Fatalf(err.Error())
+		}
+	}
+	client, err := ssh.Dial("tcp", server, pgxc.Config(username, unixConn))
 	if err != nil {
 		log.Fatalln("Failed to connect:", err)
 	}
@@ -48,6 +59,10 @@ func main() {
 		panic("Failed to create session: " + err.Error())
 	}
 	defer session.Close()
+	defer client.Close()
+	if runtime.GOOS != "Windows" {
+		defer unixConn.Close()
+	}
 	var b bytes.Buffer
 	session.Stdout = &b
 	if err := session.Run("/usr/bin/env whoami && /usr/bin/env ifconfig"); err != nil {
