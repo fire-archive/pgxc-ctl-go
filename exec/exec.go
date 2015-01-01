@@ -1,4 +1,4 @@
-package pgxc
+package exec
 
 import (
 	"bytes"

@@ -6,15 +6,15 @@
 package main
 
 import (
-	"github.com/fire/pgxc-ctl-go/pgxc"
+	"github.com/fire/pgxc-ctl-go/exec"
 )
 
 func main() {
-	var ai pgxc.Auth_info
+	var ai exec.Auth_info
 	ai.Username = "admin"
 	ai.Server = "192.168.1.81:22"
 	var cmds []string
 	cmds = append(cmds, "/usr/bin/env ls")
 	cmds = append(cmds, "/usr/bin/env ifconfig")
-	pgxc.Execute(ai, cmds)
+	exec.Execute(ai, cmds)
 }
