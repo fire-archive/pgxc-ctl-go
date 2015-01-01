@@ -1,4 +1,4 @@
-package pageant
+package exec
 
 import (
 	"github.com/davidmz/go-pageant"
@@ -8,15 +8,15 @@ import (
 
 var ag agent.Agent
 
-func Init() {
+func pageant_init() {
 	ag = pageant.New()
 }
 
-func Agent() agent.Agent {
+func pagent_agent() agent.Agent {
 	return ag
 }
 
-func Auth() (auths []ssh.AuthMethod) {
+func pageant_auth() (auths []ssh.AuthMethod) {
 	auths = []ssh.AuthMethod{ssh.PublicKeysCallback(ag.Signers)}
 	return auths
 }

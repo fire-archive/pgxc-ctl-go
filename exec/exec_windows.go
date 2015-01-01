@@ -6,16 +6,15 @@
 package exec
 
 import (
-        "github.com/fire/pgxc-ctl-go/pageant"
 	"golang.org/x/crypto/ssh"
-        "net"
+	"net"
 )
 
 func Config(username string, conn net.Conn) (*ssh.ClientConfig) {
-	pageant.Init()
+	pageant_init()
 	config := &ssh.ClientConfig{
 		User: username,
-		Auth: pageant.Auth(),
+		Auth: pageant_auth(),
 	}
-        return config
+	return config
 }
