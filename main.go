@@ -60,8 +60,8 @@ func main() {
 									var cmds []string
 									cmds = append(cmds, profileAddPgxc)
 									cmds = append(cmds, "/usr/bin/env gtm_ctl -Z gtm start -D " + g.Location + " -l gtm.log")
-									# Shell script does not exit cleanly
-									# See http://sourceforge.net/p/postgres-xc/mailman/postgres-xc-developers/thread/CAB7nPqQod%2BcsuOpKNStrWQB9DNXX9ULehUXZ0MGy3Sm920PofA%40mail.gmail.com/#msg30332055
+									// Shell script does not exit cleanly
+									// See http://sourceforge.net/p/postgres-xc/mailman/postgres-xc-developers/thread/CAB7nPqQod%2BcsuOpKNStrWQB9DNXX9ULehUXZ0MGy3Sm920PofA%40mail.gmail.com/#msg30332055
 									exec.Execute(a, cmds)
 								} else {
 									fmt.Println("Usage: start gtm master localhost:80")
