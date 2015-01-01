@@ -76,11 +76,11 @@ func main() {
 			Subcommands: []cli.Command{
 				{
 					Name:  "gtm",
-					Usage: "add a new gtm",
+					Usage: "initialize a new gtm (will remove existing directory)",
 					Subcommands: []cli.Command{
 						{
 							Name:  "master",
-							Usage: "add master node",
+							Usage: "initialize gtm master node (will remove existing directory)",
 							Action: func(c *cli.Context) {
 								if c.Args().First() != "" {
 									var a exec.Auth_info
