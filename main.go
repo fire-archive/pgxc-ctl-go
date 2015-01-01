@@ -59,7 +59,7 @@ func main() {
 									g.Location = "/home/" + ai.Username + "/pgxcgo/nodes/gtm"
 									var cmds []string
 									cmds = append(cmds, profileAddPgxc)
-									cmds = append(cmds, "/usr/bin/env gtm_ctl -Z gtm start -D " + g.Location+" &2>1")
+									cmds = append(cmds, "/usr/bin/env yes gtm_ctl -Z gtm start -D " + g.Location+" &2>1")
 									exec.Execute(a, cmds)
 								} else {
 									fmt.Println("Usage: start gtm master localhost:80")
@@ -89,7 +89,11 @@ func main() {
 									var cmds []string
 									var g gtm
 									g.Location = "/home/" + ai.Username + "/pgxcgo/nodes/gtm"
+									cmds = append(cmds, profileAddPgxc)
+									cmds = append(cmds, "/usr/bin/env gtm_ctl -Z gtm stop -D " + g.Location +" &2>1")
+									exec.Execute(a, cmds)
 									var mkdircmds []string
+									exec.Execute(a, []string{"rm -rf " + g.Location})
 									mkdircmds = append(mkdircmds, "/usr/bin/env mkdir -p "+g.Location)
 									exec.Execute(a, mkdircmds)
 									cmds = append(cmds, profileAddPgxc)
