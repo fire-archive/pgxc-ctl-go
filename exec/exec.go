@@ -7,7 +7,6 @@ package exec
 
 import (
 	"bytes"
-	"fmt"
 	"golang.org/x/crypto/ssh"
 	"log"
 	"net"
@@ -24,6 +23,7 @@ type Auth_info struct {
 }
 
 func Execute(ai Auth_info, cmds []string) {
+	log.Println(cmds)
 	var unixConn net.Conn
 	if runtime.GOOS != "windows" {
 		var err error
@@ -50,8 +50,7 @@ func Execute(ai Auth_info, cmds []string) {
 	var b bytes.Buffer
 	session.Stdout = &b
 	if err := session.Run(strings.Join(cmds, ";")); err != nil {
-		fmt.Println(cmds)
-		panic("Failed to run: " + err.Error())
+		log.Println("Failed to run: " + err.Error())
 	}
-	fmt.Println(b.String())
+	log.Println(b.String())
 }

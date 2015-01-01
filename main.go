@@ -13,6 +13,11 @@ import (
 	"fmt"
 )
 
+type gtm struct {
+	Location string
+}
+
+
 func main() {
 	var ai exec.Auth_info
 	ai.Username = "admin"
@@ -51,8 +56,12 @@ func main() {
 								a.Username = ai.Username
 								a.Server = c.Args().First()
 								var cmds []string
-								cmds = append(cmds, "")
-								log.Print(cmds)
+								var g gtm
+								g.Location = "/home/" + ai.Username + "/pgxcgo/nodes/gtm"
+								var mkdircmds []string
+								mkdircmds = append(mkdircmds, "/usr/bin/env mkdir -p " + g.Location)
+								exec.Execute(a, mkdircmds)
+								cmds = append(cmds, "/usr/bin/env initgtm -Z gtm -D " + g.Location)
 									exec.Execute(a, cmds)
 								} else {
 									fmt.Println("Usage: add gtm master localhost:80")
