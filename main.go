@@ -26,6 +26,7 @@ func main() {
 	app.Name = "pgxc"
 	app.Usage = "Controls a postgresqlxl cluster"
 	app.EnableBashCompletion = true
+	profileAddPgxc := "PATH=$PATH:/usr/local/pgsql/bin"
 	app.Commands = []cli.Command{
 		{
 			Name:      "run",
@@ -56,7 +57,10 @@ func main() {
 									a.Server = c.Args().First()
 									var g gtm
 									g.Location = "/home/" + ai.Username + "/pgxcgo/nodes/gtm"
-									exec.Execute(a, []string{"/usr/bin/env gtm_ctl -Z gtm start -D " + g.Location})
+									var cmds []string
+									cmds = append(cmds, profileAddPgxc)
+									cmds = append(cmds, "/usr/bin/env gtm_ctl -Z gtm start -D " + g.Location+" &2>1")
+									exec.Execute(a, cmds)
 								} else {
 									fmt.Println("Usage: start gtm master localhost:80")
 								}
@@ -88,7 +92,8 @@ func main() {
 									var mkdircmds []string
 									mkdircmds = append(mkdircmds, "/usr/bin/env mkdir -p "+g.Location)
 									exec.Execute(a, mkdircmds)
-									cmds = append(cmds, "/usr/bin/env initgtm -Z gtm -D "+g.Location)
+									cmds = append(cmds, profileAddPgxc)
+									cmds = append(cmds, "/usr/bin/env initgtm -Z gtm -D "+g.Location+" 2>&1")
 									exec.Execute(a, cmds)
 								} else {
 									fmt.Println("Usage: init gtm master localhost:80")
@@ -117,7 +122,10 @@ func main() {
 									a.Server = c.Args().First()
 									var g gtm
 									g.Location = "/home/" + ai.Username + "/pgxcgo/nodes/gtm"
-									exec.Execute(a, []string{"/usr/bin/env gtm_ctl -Z gtm stop -D " + g.Location})
+									var cmds []string
+									cmds = append(cmds, profileAddPgxc)
+									cmds = append(cmds, "/usr/bin/env gtm_ctl -Z gtm stop -D " + g.Location +" &2>1")
+									exec.Execute(a, cmds)
 								} else {
 									fmt.Println("Usage: stop gtm master localhost:80")
 								}

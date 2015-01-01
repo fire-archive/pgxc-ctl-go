@@ -23,7 +23,6 @@ type Auth_info struct {
 }
 
 func Execute(ai Auth_info, cmds []string) {
-	log.Println(cmds)
 	var unixConn net.Conn
 	if runtime.GOOS != "windows" {
 		var err error
@@ -49,7 +48,9 @@ func Execute(ai Auth_info, cmds []string) {
 
 	var b bytes.Buffer
 	session.Stdout = &b
-	if err := session.Run(strings.Join(cmds, ";")); err != nil {
+	expanded_cmds := strings.Join(cmds, ";")
+	log.Println(expanded_cmds)
+	if err := session.Run(expanded_cmds); err != nil {
 		log.Println("Failed to run: " + err.Error())
 	}
 	log.Println(b.String())
