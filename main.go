@@ -10,6 +10,7 @@ import (
 	"github.com/codegangsta/cli"
 	"github.com/fire/pgxc-ctl-go/exec"
 	"log"
+	"fmt"
 )
 
 func main() {
@@ -31,6 +32,35 @@ func main() {
 				cmds = append(cmds, c.Args().First())
 				log.Print(cmds)
 				exec.Execute(ai, cmds)
+			},
+		},
+		{
+			Name:      "add",
+			Usage:     "add new nodes",
+			Subcommands: []cli.Command {
+				{
+					Name:  "gtm",
+					Usage: "add a new gtm",
+					Subcommands: []cli.Command {
+						{
+							Name: "master",
+							Usage: "add master node",
+							Action: func(c *cli.Context) {
+								if c.Args().First() != "" {
+								var a exec.Auth_info
+								a.Username = ai.Username
+								a.Server = c.Args().First()
+								var cmds []string
+								cmds = append(cmds, "")
+								log.Print(cmds)
+									exec.Execute(a, cmds)
+								} else {
+									fmt.Println("Usage: add gtm master localhost:80")
+								}
+							},
+						},
+					},
+				},
 			},
 		},
 	}
