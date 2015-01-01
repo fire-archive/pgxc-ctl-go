@@ -9,20 +9,30 @@ import (
 	"os"
 	"github.com/codegangsta/cli"
 	"github.com/fire/pgxc-ctl-go/exec"
+	"log"
 )
 
 func main() {
+	var ai exec.Auth_info
+	ai.Username = "admin"
+	ai.Server = "192.168.1.81:22"
+
 	app := cli.NewApp()
 	app.Name = "pgxc"
 	app.Usage = "Controls a postgresqlxl cluster"
-	app.Action = func(c *cli.Context) {
-		var ai exec.Auth_info
-		ai.Username = "admin"
-		ai.Server = "192.168.1.81:22"
-		var cmds []string
-		cmds = append(cmds, "/usr/bin/env whoami")
-		cmds = append(cmds, "/usr/bin/env ifconfig")
-		exec.Execute(ai, cmds)
+	app.EnableBashCompletion = true
+	app.Commands = []cli.Command{
+		{
+			Name:      "run",
+			ShortName: "r",
+			Usage:     "run a shell command",
+			Action: func(c *cli.Context) {
+				var cmds []string
+				cmds = append(cmds, c.Args().First())
+				log.Print(cmds)
+				exec.Execute(ai, cmds)
+			},
+		},
 	}
 	app.Run(os.Args)
 }
