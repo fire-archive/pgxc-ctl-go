@@ -6,15 +6,23 @@
 package main
 
 import (
+	"os"
+	"github.com/codegangsta/cli"
 	"github.com/fire/pgxc-ctl-go/exec"
 )
 
 func main() {
-	var ai exec.Auth_info
-	ai.Username = "admin"
-	ai.Server = "192.168.1.81:22"
-	var cmds []string
-	cmds = append(cmds, "/usr/bin/env ls")
-	cmds = append(cmds, "/usr/bin/env ifconfig")
-	exec.Execute(ai, cmds)
+	app := cli.NewApp()
+	app.Name = "pgxc"
+	app.Usage = "Controls a postgresqlxl cluster"
+	app.Action = func(c *cli.Context) {
+		var ai exec.Auth_info
+		ai.Username = "admin"
+		ai.Server = "192.168.1.81:22"
+		var cmds []string
+		cmds = append(cmds, "/usr/bin/env whoami")
+		cmds = append(cmds, "/usr/bin/env ifconfig")
+		exec.Execute(ai, cmds)
+	}
+	app.Run(os.Args)
 }
