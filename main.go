@@ -13,10 +13,6 @@ import (
 	"os"
 )
 
-type gtm struct {
-	Location string
-}
-
 const (
 	username = "admin"
 	server = "192.168.1.81:22"
@@ -60,11 +56,9 @@ func main() {
 									var a exec.Auth_info
 									a.Username = ai.Username
 									a.Server = c.Args().First()
-									var g gtm
-									g.Location = "/home/" + ai.Username + "/pgxcgo/nodes/gtm"
 									var cmds []string
 									cmds = append(cmds, profileAddPgxc)
-									cmds = append(cmds, "/usr/bin/env gtm_ctl -Z gtm start -D " + g.Location + " -l gtm.log")
+									cmds = append(cmds, "/usr/bin/env gtm_ctl -Z gtm start -D " + location + " -l gtm.log")
 									// Shell script does not exit cleanly
 									// See http://sourceforge.net/p/postgres-xc/mailman/postgres-xc-developers/thread/CAB7nPqQod%2BcsuOpKNStrWQB9DNXX9ULehUXZ0MGy3Sm920PofA%40mail.gmail.com/#msg30332055
 									exec.Execute(a, cmds)
@@ -94,14 +88,12 @@ func main() {
 									a.Username = ai.Username
 									a.Server = c.Args().First()
 									var cmds []string
-									var g gtm
-									g.Location = location
 									cmds = append(cmds, profileAddPgxc)
-									cmds = append(cmds, "/usr/bin/env gtm_ctl -Z gtm stop -D " + g.Location +" &2>1")
+									cmds = append(cmds, "/usr/bin/env gtm_ctl -Z gtm stop -D " + location +" &2>1")
 									cmds = append(cmds, "rm -rf " + location)
-									cmds = append(cmds, "/usr/bin/env mkdir -p "+g.Location)
+									cmds = append(cmds, "/usr/bin/env mkdir -p "+location)
 									cmds = append(cmds, profileAddPgxc)
-									cmds = append(cmds, "/usr/bin/env initgtm -Z gtm -D "+g.Location+" 2>&1")
+									cmds = append(cmds, "/usr/bin/env initgtm -Z gtm -D "+location+" 2>&1")
 									exec.Execute(a, cmds)
 								} else {
 									fmt.Println("Usage: init gtm master localhost:80")
@@ -128,11 +120,9 @@ func main() {
 									var a exec.Auth_info
 									a.Username = ai.Username
 									a.Server = c.Args().First()
-									var g gtm
-									g.Location = "/home/" + ai.Username + "/pgxcgo/nodes/gtm"
 									var cmds []string
 									cmds = append(cmds, profileAddPgxc)
-									cmds = append(cmds, "/usr/bin/env gtm_ctl -Z gtm stop -D " + g.Location +" 2>&1")
+									cmds = append(cmds, "/usr/bin/env gtm_ctl -Z gtm stop -D " + location +" 2>&1")
 									exec.Execute(a, cmds)
 								} else {
 									fmt.Println("Usage: stop gtm master localhost:80")
