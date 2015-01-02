@@ -17,10 +17,15 @@ type gtm struct {
 	Location string
 }
 
+const (
+	username = "admin"
+	server = "192.168.1.81:22"
+	location = "/home/" + username + "/pgxcgo/nodes/gtm"
+)
 func main() {
 	var ai exec.Auth_info
-	ai.Username = "admin"
-	ai.Server = "192.168.1.81:22"
+	ai.Username = username
+	ai.Server = location
 
 	app := cli.NewApp()
 	app.Name = "pgxc"
@@ -90,14 +95,11 @@ func main() {
 									a.Server = c.Args().First()
 									var cmds []string
 									var g gtm
-									g.Location = "/home/" + ai.Username + "/pgxcgo/nodes/gtm"
+									g.Location = location
 									cmds = append(cmds, profileAddPgxc)
 									cmds = append(cmds, "/usr/bin/env gtm_ctl -Z gtm stop -D " + g.Location +" &2>1")
-									exec.Execute(a, cmds)
-									var mkdircmds []string
-									exec.Execute(a, []string{"rm -rf " + g.Location})
-									mkdircmds = append(mkdircmds, "/usr/bin/env mkdir -p "+g.Location)
-									exec.Execute(a, mkdircmds)
+									cmds = append(cmds, "rm -rf " + location)
+									cmds = append(cmds, "/usr/bin/env mkdir -p "+g.Location)
 									cmds = append(cmds, profileAddPgxc)
 									cmds = append(cmds, "/usr/bin/env initgtm -Z gtm -D "+g.Location+" 2>&1")
 									exec.Execute(a, cmds)

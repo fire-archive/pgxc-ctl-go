@@ -48,7 +48,7 @@ func Execute(ai Auth_info, cmds []string) {
 
 	var b bytes.Buffer
 	session.Stdout = &b
-	expanded_cmds := strings.Join(cmds, ";")
+	expanded_cmds := strings.Join(cmds, " && ")
 	log.Println(expanded_cmds)
 	if err := session.Run(expanded_cmds); err != nil {
 		log.Println("Failed to run: " + err.Error())
